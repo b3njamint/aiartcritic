@@ -174,13 +174,13 @@ def classifyEra(request):
 
 ###################################################
 # AUTODELTE FILED OLDER THAN 30 S.
-    path = 'static/media'
-    now = time.time()
-    for f in os.listdir(path):
-        f = os.path.join(path, f)
-        if os.stat(f).st_mtime < now - 30:#7 * 86400:
-            if os.path.isfile(f):
-                os.remove(f)
+    # path = 'static/media'
+    # now = time.time()
+    # for f in os.listdir(path):
+    #     f = os.path.join(path, f)
+    #     if os.stat(f).st_mtime < now - 30:#7 * 86400:
+    #         if os.path.isfile(f):
+    #             os.remove(f)
 ####################################################
 
     return render(request, "critic.html", {'cimg':cimg})
