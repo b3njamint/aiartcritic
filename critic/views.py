@@ -115,7 +115,7 @@ def classifyEra(request):
     era1Probability = max(probabilities)
     # print ("\nPrimary era similarity is: %s, %.3f%%" % (era1Label, era1Probability * 100))
 
-    # remove maximum to get second
+    # remove max to get second
     eras.remove(era1Label)
     probabilities.remove(era1Probability)
 
