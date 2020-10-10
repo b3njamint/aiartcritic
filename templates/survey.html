@@ -1,0 +1,219 @@
+{% extends 'template_base.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta name='viewport' charset="UTF-8" content = 'width-device-width, intial scale=1'>
+{% block title %}
+            <title>Contact</title>
+{% endblock title %}
+        
+{% block css %}        
+    <style>
+    body {
+			width: 100%;
+		}
+    #header {
+      margin: 10% auto 2% auto;
+    }
+		label {
+			text-align:center
+		}
+		.question {
+			margin-top:20px;
+		}
+		input {
+      width: 200px;
+			margin-top:10px;
+		  font-size:15px;
+			color: var(--bronze);
+		}
+		select {
+			margin-top:10px;
+			font-size:14px;
+			color: var(--bronze);
+		}
+		textarea {
+			margin-top:10px;
+			font-size:15px;
+			color: var(--bronze);;
+			font-family: inherit;
+      border-width: 1px;
+			min-height: 50px;
+			min-width: 300px;
+		}
+		button {
+			font-size: 16px;
+			padding: 10px;
+			border: none;
+			background-color: var(--bronze);
+			color:white;
+		}
+		button:hover {
+			background-color: black;
+			color:white;
+			transition: 0.5s;
+		}
+    </style>
+
+    <style>
+    .slidecontainer {
+      width: 100%;
+    }
+    
+    .slider {
+      -webkit-appearance: none;
+      width: 20%;
+      height: 15px;
+      background: none;
+      border: 1px solid black;
+      opacity: 0.7;
+      -webkit-transition: .5s;
+      transition: .5s;
+    }
+    
+    .slider:hover {
+      opacity: 1;
+    }
+    
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 15px;
+      height: 15px;
+      background: var(--bronze);
+      cursor: pointer;
+    }
+    
+    .slider::-moz-range-thumb {
+      width: 15px;
+      height: 15px;
+      background: var(--bronze);
+      cursor: pointer;
+    }
+    </style>
+{% endblock css %}
+	</head>
+	<body>
+{% block html %}
+		<center>
+		<div id="header">
+			<h1 style="margin-bottom:5px;font-weight:normal;">Contact Me</h1>
+			<label style="color:var(--bronze)">Let me know if you have any questions, suggestions, or would like to collaborate!</label>
+        </div>
+        
+		<main>
+			<form id="contact_form">
+				<div class="question">
+          <label>Name:</label> <br>
+          <input id='name' name='name' placeholder='Firstname Lastname'>
+				</div>
+				
+				<div class="question">
+          <label>Email:</label><br/>
+          <input id='email' name='email' placeholder="email@domain.com"><br/>
+				</div>
+
+        <div class="question"></div>
+          <label>Rate your experience with the AI Art Critic:</label><br/>
+          <div class="slidecontainer">
+              <input type="range" name="rating" min="1" max="100" value="100" class="slider" id="ratingSlider">
+              <p><span id="ratingName"></span>: <span id="ratingValue"></span>%</p>
+          </div>
+        </div>
+        
+        <div class="question">
+          <label>How did you find out about the AI Art Critic?</label><br/>
+          <textarea id='find' name="find" placeholder='Type here'></textarea><br/>
+        </div>
+        
+        <div class="question">
+          <label>What would you like me to know?</label><br/>
+          <textarea id='inquiry' name="inquiry" placeholder='Type here'></textarea><br/>
+				</div>
+				
+				<div class="question">
+          <label style="color:var(--bronze)">Thank you for your input! I typically respond in 1-2 days.</label><br><br>
+          <button onclick='submit()'>Submit</button>
+        </div>
+      </form>
+    </main>
+  </center>
+{% endblock html %}
+
+{% block js %}
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@2.4.1/dist/email.min.js"></script>
+        <script>
+          (function(){
+           emailjs.init('user_JhVKIatQRDmF9cIdvjXOp');
+          })();
+          window.onload = function() {
+            document.getElementById('contact_form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                // generate the contact number value
+                // this.contact_number.value = Math.random() * 100000 | 0;
+                emailjs.sendForm('benjamint.robo', 'template_z7gk6a9', this, "user_JhVKIatQRDmF9cIdvjXOp");
+                alert("Thank you for your input!");
+            });
+          }
+        </script>
+
+        
+        <!-- <script>
+        function submit() {
+            var name = document.getElementById('name')
+            var email = document.getElementById('email')
+            var rating = document.getElementById('ratingValue')
+            var find = document.getElementById('find')
+            var inquiry = document.getElementById('inquiry')
+        
+            var survey = {
+            name: name.value,
+            email: email.value,
+            rating: rating.value,
+            find: find.value,
+            inquiry: inquiry.value,
+            survey: 'Survey',
+            }
+            
+            var email = {
+                to: 'benjamint.robo@gmail.com',
+                //template: 'contact.email',
+                subject: 'AI Art Critic Contact'
+            }
+            
+            var xhr= new XMLHttpRequest();
+            xhr.open('POST', '/survey/submit');
+            xhr.setRequestHeader('content-type', 'application/json')
+            xhr.send(JSON.stringify({
+                survey:survey//, email:email
+            }))
+        }
+        </script> -->
+        
+        <script>
+            var slider = document.getElementById("ratingSlider");
+            var ratingValue = document.getElementById("ratingValue");
+            var ratingName = document.getElementById("ratingName");
+            
+            ratingValue.innerHTML = slider.value;
+            ratingName.innerHTML = "Excellent";
+
+            
+            slider.oninput = function() {
+              ratingValue.innerHTML = this.value;
+              if (slider.value < 60)
+                ratingName.innerHTML = "Poor";  
+              else if (slider.value < 70)
+                ratingName.innerHTML = "Mediocre";  
+              else if (slider.value < 80)
+                ratingName.innerHTML = "Decent";  
+              else if (slider.value < 90)
+                ratingName.innerHTML = "Good";  
+              else
+                ratingName.innerHTML = "Excellent";  
+            }
+        </script>
+{% endblock js %}
+	</body>
+</html>

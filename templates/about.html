@@ -1,0 +1,91 @@
+{% extends 'template_base.html' %}
+
+{% block css %}
+    <style>
+        body{
+            min-height:100vh;
+        }
+
+        h1 {
+            font-size: 35px;    
+        }
+
+        em {
+            color: var(--bronze);
+        }
+
+        /* a:link {
+        color: var(--bronze);
+        }
+        a:visited {
+        color: var(--bronze);
+        } */
+        .intro {
+            margin: 0px 100px;
+            font-size:20px;
+            word-wrap: break-word;
+            /* display: flex;
+            align-items: center;
+            justify-content: space-between; */
+        }
+    
+        .intro .right {
+            float: right;
+            width: 40%;
+            margin-top: 15%;
+        }
+        .intro .left {
+            float: left;
+            width: 58%;
+            text-align: right;
+            margin-top: 15%;
+        }
+    
+        .footer {
+            font-size: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+    }
+    </style>
+{% endblock css %}
+
+{% block html %}
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+
+
+  
+ <!-- <section class="welcome"></section> -->
+
+<div class="intro">
+
+    <div class="right">
+        
+    </div>
+
+    <div class="left">
+        Welcome to the AI Art Critic! Whether you are here to get your artwork critiqued, curious about artificial intelligence and art, or just looking to have some fun, I hope you enjoy your time here!<br><br><br>
+        <h1>Development Notes</h1>
+        <em>The AI Art Critic is still under development.</em> <br>Currently, I am working on a mobile UI/UX so more people can access this tool<br><br>
+        <h1>Instructions</h1>
+        <em>If you want to use an existing image:</em><br>Find an image of your choice (a famous painting, a flower, a meme, anything works!), then right click and <em>copy the image address</em>. If you copy the image and not the <em>image address</em>, it will not work. Paste the <em>image address</em> at the "Image URL" text input box.<br><br>
+        <em>If you want to use your own image:</em><br>Upload your image in the "Choose File" file input box. Although files up to 10 MB will be accepted, I recommend <em>limiting file size to &lt 1 MB.</em> <br><br>
+        Click "Analyze," and twiddle your thumbs for a few moments as the algorithms process your request. Please note that analysis may take up to 30 seconds on a slow internet connection.<br><br>
+        <!-- <h1>How it Works (Simply)</h1>
+        Magic! Just kidding, but the beauty of artificial intelligence is shown here. I used  Django to connect everything together.
+        Your image address is sent to my Python pixel analysis algorithms and machine learning models, which open the url as an image file to perform the necessary calculations. When the results are complete, they will display on your screen. -->
+    </div>
+</div>
+
+
+<div class="footer">
+    <p>&copy2020 Benjamin Tang</p>
+</div>
+{% endblock html %}
+
+
+{% block js %}
+<script>
+
+</script>
+{% endblock js %}

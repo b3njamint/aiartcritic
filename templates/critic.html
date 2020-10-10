@@ -1,0 +1,211 @@
+{% extends 'template_base.html' %}
+
+{% block css %}
+    <style>
+        body{
+            min-height:100vh;
+        }
+
+        h1 {
+            font-size: 35px;    
+            line-height: 50px;
+        }
+    
+        label {
+            font-size: 20px;
+        }
+    
+        input {
+            font-size: 15px;
+            background-color: white;
+        }
+        
+        input[type=text] {
+            width: 200px;
+            color: var(--bronze);
+        }
+        
+        input[type=submit] {
+            background-color: var(--bronze);
+            color: white;
+            border-width: 0px;
+            padding: 10px;
+        }
+
+        input[type=submit]:hover {
+            background-color: black;
+            transition: 0.5s;
+        }
+
+        .inputfile {
+            color: var(--bronze);
+        }
+    
+        .critic {
+            margin: 0px 100px;
+            font-size:20px;
+            word-wrap: break-word;
+            /* display: flex;
+            align-items: center;
+            justify-content: space-between; */
+        }
+    
+        .critic .right {
+            float: right;
+            width: 40%;
+            margin-top: 15%;
+        }
+        .critic #left {
+            float: left;
+            width: 58%;
+            text-align: right;
+        }
+
+        .footer {
+            font-size: 15px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+    }
+    </style>
+{% endblock css %}
+
+{% block html %}
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&display=swap" rel="stylesheet">
+
+
+  
+ <!-- <section class="welcome"></section> -->
+
+<div class="critic">
+    <form action="/critic/" method="post" enctype="multipart/form-data" id="userInput">{% csrf_token %}
+        <div class="right">
+            <h1>Welcome to the AI Art Critic.<br>Link an image to analyze.</h1>
+            <br>
+            <label>Image URL: </label> <input type="text" name="url" id="link">
+            <br><br>
+            <label>Image Upload: </label> <input type="file" accept="image/*" name="imgfile" id="file" class="inputfile">
+            <br><br>
+            <input type="submit" value="Analyze">
+            <!-- <br>
+            <br>
+            <label>Image URL is: </label> {{cimg.img}} -->
+            <br><br><br>
+            <div id="summary">
+                {{cimg.result_era1}}<br>
+                {{cimg.result_era2}}<br><br>
+                {{cimg.result_mood}}<br><br>
+                {{cimg.result_dark}}<br>
+                <a style="color:#555555">{{cimg.result_med}}</a><br>
+                <a style="color:#ABABAB">{{cimg.result_light}}</a><br><br>
+                <a style="color:{{cimg.colorDomHex}}">{{cimg.result_dom}}</a><br>
+                <a style="color:{{cimg.colorAvgHex}}">{{cimg.result_avg}}</a><br>
+
+                
+                <!-- <label>Here is the result: </label> <br><br>
+                Your piece is most similar to artwork of the {{cimg.era1}} era with a {{cimg.era1Prob}} similarity.<br>
+                It is also similar to artwork of the {{cimg.era2}} era with a {{cimg.era2Prob}} similarity.<br><br>
+                The mood of this piece is {{cimg.mood}}.<br><br>
+                Dark ratio: {{cimg.valueRatioDark}}<br>
+                <a style="color:#555555">Medium ratio: {{cimg.valueRatioMed}}</a><br>
+                <a style="color:#ABABAB">Light ratio: {{cimg.valueRatioLight}}</a><br><br>
+
+                Dominant color: <a style="color:{{cimg.colorDomHex}}">rgb {{cimg.colorDomRgb}}, hex {{cimg.colorDomHex}}</a><br>
+                Average color: <a style="color:{{cimg.colorAvgHex}}">rgb: {{cimg.colorAvgRgb}}, hex {{cimg.colorAvgHex}}</a><br> -->
+            </div>
+        </div>
+
+        <div id="left">
+            <img src= {{cimg.img}} style="height:100vh" align="right" alt="">
+
+            
+            <!-- {{cimg.color_dom_rgb}} <br>
+            {{cimg.color_dom_hex}} <br>
+            {{cimg.color_avg_rgb}} <br>
+            {{cimg.color_avg_hex}} <br> -->
+            <br>
+            <br>
+        </div>
+    </form>
+</div>
+
+
+<div class="footer">
+    <p>&copy2020 Benjamin Tang</p>
+</div>
+{% endblock html %}
+
+
+{% block js %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+    var fileUpload = document.getElementById("file");
+
+    fileUpload.onchange = function() {
+        if(this.files[0].size > 10 * 1048576){
+        alert("Please limit your file to 10MB (< 1MB recommended).\nThe smaller the file, the faster you will get a result.\nConsider uploading a screenshot.");
+        this.value = "";
+        };
+    };
+
+    document.getElementById("userInput").onsubmit = function () {
+        var link = document.forms["userInput"]["link"].value;
+        var file = document.forms["userInput"]["file"].files.length;
+
+        var submit = true;
+
+        if (link == "" && file == 0) {
+            alert("Please provide an image URL or an image file.")
+            submit = false;
+        }
+        if(submit == true)
+            loading();        
+        return submit;
+    }
+
+    function loading() {
+        // var link = document.getElementById("link");
+        // var file = document.getElementById("file");
+        // if(link == "" && file.files.length == 0)
+        //     alert("nothing there!");
+        document.getElementById('summary').innerHTML = "<img src='https://raw.githubusercontent.com/Codelessly/FlutterLoadingGIFs/master/packages/cupertino_activity_indicator.gif' width='200px' height='200px' align='center'>";
+    }
+    //CIRCLE LOADING GIF: https://i.gifer.com/H0bj.gif
+
+    // window.onload = function exampleFunction() { 
+    //     document.getElementById("summary").style.display = "none";;
+    // } 
+    // function showSummary() {
+    //     document.getElementById("summary").style.display = "initial";;
+    // }
+</script>
+{% endblock js %}
+
+
+
+
+<!-- <h1>this is the critic page.</h1> -->
+
+<!-- <ul>
+    <li>temporary item A</li>
+    <li>temproary item B</li>
+</ul> -->
+
+<!-- <ul>
+    {% for critic_item in all_items %}
+        <li>{{ critic_item.content }}
+            <form action="/deleteCritic/{{critic_item.id}}/"
+                  style="display: inline;"
+                  method="post">{% csrf_token %}
+                <input type="submit" value="Delete"/>
+            </form>
+        </li>
+    {% endfor %}
+</ul>
+
+<form action="/addCritic/" method="post">{% csrf_token %}
+    <input type="text" name="content"/>
+    <input type="submit" valur="Add"/>
+</form> -->
