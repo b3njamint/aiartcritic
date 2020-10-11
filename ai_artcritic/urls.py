@@ -15,27 +15,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from hello.views import myView # import myView function from views.py in hello directory
 from django.shortcuts import redirect
 from django.conf import settings
 from django.conf.urls.static import static
 
-from critic.views import criticView, addCritic, deleteCritic, aboutView, contactView, classifyEra, classifyMood, analyzeValue, analyzeColor, random_test
+from critic.views import criticView, addCritic, deleteCritic, aboutView, contactView
 
 urlpatterns = [
-    path('', lambda req: redirect('/home/')),
+    path('', lambda req: redirect('/critic/')),
     path('admin/', admin.site.urls),
-    path('sayHello/', myView),
-    path('home/', criticView),
+    path('critic/', criticView),
     path('addCritic/', addCritic),
     path('deleteCritic/<int:critic_id>/', deleteCritic),
-    path('critic/', classifyEra),
-    path('classifyMood/', classifyMood),
-    path('analyzeValue/', analyzeValue),
-    path('analyzeColor/', analyzeColor),
     path('about/', aboutView),
     path('contact/', contactView),
-    path('random_test/', random_test, name="random_test"),
 ]
 if settings.DEBUG:
     urlpatterns += static (settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

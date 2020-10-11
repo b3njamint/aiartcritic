@@ -11,7 +11,7 @@ import os.path
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render
 from django.http import HttpResponseRedirect
-from .models import CriticItem, ArtPiece
+from .models import CriticItem, ArtPiece, UploadImage
 
 import requests
 
@@ -24,9 +24,11 @@ import os, time, sys
 
 
 def criticView(request):
-    all_critic_items = CriticItem.objects.all()
-    return render(request, 'critic.html',
-        {'all_items': all_critic_items})
+    # all_critic_items = CriticItem.objects.all()
+    if request.method != 'POST':
+        return render(request, 'critic.html')
+    else:
+        return classifyEra(request)
 
 def addCritic(request):
     new_item = CriticItem(content = request.POST['content'])
@@ -39,22 +41,15 @@ def deleteCritic(request, critic_id):
     return HttpResponseRedirect('/critic/')
 
 def aboutView(request):
-    all_critic_items = CriticItem.objects.all()
-    return render(request, 'about.html',
-        {'all_items': all_critic_items})
+    return render(request, 'about.html')
 
 def contactView(request):
-    all_critic_items = CriticItem.objects.all()
-    return render(request, 'contact.html',
-        {'all_items': all_critic_items})
+    return render(request, 'contact.html')
 
 def surveyView(request):
     all_critic_items = CriticItem.objects.all()
     return render(request, 'survey.html',
         {'all_items': all_critic_items})
-
-def random_test(request):
-    return render(request, 'random_test.html')
 
 #######################################################################################################
 
@@ -84,16 +79,35 @@ def classifyEra(request):
         response = requests.request('POST', url, headers=headers, auth=requests.auth.HTTPBasicAuth('4S_Y0S2gS0DSpnZlz7fwPDa5W5oP5zuA', ''), data=data)
 
     else: #if the user uploads an IMAGE
-        image_type = "file"
+        image_type = "link"
         img = request.FILES
         image_file = img['imgfile']
-        fs = FileSystemStorage()
-        new_image_name = fs.save(image_file.name, image_file)
-        image_url = "static/" + fs.url(new_image_name)[1:]
-        url = 'https://app.nanonets.com/api/v2/ImageCategorization/LabelFile/'
-        data = {'file': open(image_url, 'rb'), 'modelId': ('', 'e483f029-8ad6-43c4-a0ca-1377a2d04078')}
+        
+        try:
+            my_image = UploadImage()
+            my_image.photo.save(image_file.name, image_file)
+        except:
+            pass
+        image_url = my_image.photo.url
+        print (image_url)
 
-        response = requests.post(url, auth= requests.auth.HTTPBasicAuth('4S_Y0S2gS0DSpnZlz7fwPDa5W5oP5zuA', ''), files=data)
+        url = 'https://app.nanonets.com/api/v2/ImageCategorization/LabelUrls/'
+        headers = {
+        'accept': 'application/x-www-form-urlencoded'
+        }
+        image_url_list=[]
+        image_url_list.append(image_url)
+        data = {
+            'modelId': 'e483f029-8ad6-43c4-a0ca-1377a2d04078',
+            'urls' : image_url_list
+        }
+
+        response = requests.request('POST', url, headers=headers, auth=requests.auth.HTTPBasicAuth('4S_Y0S2gS0DSpnZlz7fwPDa5W5oP5zuA', ''), data=data)
+
+        #image_url = "static/" + fs.url(new_image_name)[1:]
+        #url = 'https://app.nanonets.com/api/v2/ImageCategorization/LabelFile/'
+        #data = {'file': open(image_url, 'rb'), 'modelId': ('', 'e483f029-8ad6-43c4-a0ca-1377a2d04078')}
+        #response = requests.post(url, auth= requests.auth.HTTPBasicAuth('4S_Y0S2gS0DSpnZlz7fwPDa5W5oP5zuA', ''), files=data)
 
     ratings = response.text
     

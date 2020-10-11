@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
-from google.oauth2 import service_account
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -38,7 +37,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'hello',
     'critic',
     'storages', 
 ]
@@ -146,23 +144,21 @@ if environment == 'local':
     #DOWNLOAD_ROOT = os.path.join(PROJECT_ROOT, "static/media/downloads")
 # for prod environment
 else: 
-        
     DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-    #STATICFILES_STORAGE = 'gcloud.GoogleCloudStaticFileStorage'
+    STATICFILES_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
     
     GS_PROJECT_ID = 'ai-art-critic'
-    #GS_STATIC_BUCKET_NAME = 'NAME OF THE STATIC BUCKET CREATED IN CLOUD STORAGE'
+    GS_STATIC_BUCKET_NAME = 'critic_media'
     GS_MEDIA_BUCKET_NAME = 'critic_media'  # same as STATIC BUCKET if using single bucket both for static and media
     GS_BUCKET_NAME = 'critic_media'
-    GS_STATIC_BUCKET_NAME = 'ai-art-critic.appspot.com'
-    GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-        os.path.join(BASE_DIR, "ai-art-critic-a8b702aa5ccd.json")
-    )
-    STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
-    STATIC_ROOT = "static/"
+    GS_DEFAULT_ACL = 'publicRead'
+    GS_FILE_OVERWRITE = False
+    
+    # STATIC_URL = 'https://storage.googleapis.com/{}/'.format(GS_STATIC_BUCKET_NAME)
+    # STATIC_ROOT = "static/"
 
     MEDIA_URL = 'https://storage.googleapis.com/{}/'.format(GS_MEDIA_BUCKET_NAME)
-    MEDIA_ROOT = "static/media/"
+    MEDIA_ROOT = "media/"
     
     UPLOAD_ROOT = 'media/uploads/'
     

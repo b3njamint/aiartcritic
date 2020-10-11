@@ -1,5 +1,8 @@
 from django.db import models
 
+class UploadImage(models.Model):
+    photo = models.ImageField(upload_to='photos/')
+
 class CriticItem(models.Model):
     content = models.TextField()
 

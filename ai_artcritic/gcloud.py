@@ -11,7 +11,7 @@
       """
       Google file storage class which gives a media file path from MEDIA_URL not google generated one.
       """
-      bucket_name = setting('ai-art-critic.appspot.com')
+      bucket_name = setting('GS_BUCKET_NAME')
 
       def url(self, name):
           """
